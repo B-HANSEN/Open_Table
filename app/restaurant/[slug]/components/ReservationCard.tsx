@@ -33,6 +33,34 @@ export default function ReservationCard({
 		} else setSelectedDate(null);
 	};
 
+	const renderAvailability = () => {
+		if (!data) return null;
+		if (!data.some((t) => t.available))
+			return <p className='text-sm mt-4 text-reg'>No availability for this date, time, or party size.</p>;
+		return (
+			<div className='mt-4'>
+				<p className='text-reg'>Select a time</p>
+				<div className='flex flex-wrap mt-2'>
+					{data.map((time, index) =>
+						time.available ? (
+							<Link
+								key={index}
+								className='w-24 p-2 mb-3 mr-3 text-center text-white bg-gray-300 rounded cursor-pointer'
+								href={`/reserve/${slug}?date=${day}T${time.time}&partySize=${partySize}`}
+							>
+								<p className='text-sm font-bold'>
+									{convertToDisplayTime(time.time as Time)}
+								</p>
+							</Link>
+						) : (
+							<p key={index} className='w-24 p-2 mb-3 mr-3 bg-gray-300 rounded'></p>
+						)
+					)}
+				</div>
+			</div>
+		);
+	};
+
 	const handleClick = () => {
 		fetchAvailabilities({
 			slug,
@@ -121,31 +149,7 @@ export default function ReservationCard({
 					{loading ? <CircularProgress color='inherit' /> : 'Find a time'}
 				</button>
 			</div>
-			{data && data.length && (
-				<div className='mt-4'>
-					<p className='text-reg'>Select a time</p>
-					<div className='flex flex-wrap mt-2'>
-						{data.map((time, index) => {
-							return time.available ? (
-								<Link
-									key={index}
-									className='w-24 p-2 mb-3 mr-3 text-center text-white bg-gray-300 rounded cursor-pointer'
-									href={`/reserve/${slug}?date=${day}T${time.time}&partySize=${partySize}`}
-								>
-									<p className='text-sm font-bold'>
-										{convertToDisplayTime(time.time as Time)}
-									</p>
-								</Link>
-							) : (
-								<p
-									key={index}
-									className='w-24 p-2 mb-3 mr-3 bg-gray-300 rounded'
-								></p>
-							);
-						})}
-					</div>
-				</div>
-			)}
+			{renderAvailability()}
 		</div>
 	);
 }
