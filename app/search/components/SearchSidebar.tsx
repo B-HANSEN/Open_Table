@@ -1,5 +1,3 @@
-'use client';
-
 import { Cuisine, Location, PRICE } from '@prisma/client';
 import Link from 'next/link';
 

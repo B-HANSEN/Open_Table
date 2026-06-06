@@ -1,8 +1,6 @@
 import { NextRequest } from 'next/server';
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '@/lib/prisma';
 import jwt, { JwtPayload } from 'jsonwebtoken'; // jwt lib causes issues with SSR apps, use here for decoding payload only!
-
-const prisma = new PrismaClient();
 
 /** when testing in Postman, add Headers:
  * Authorization with value 'Bearer <paste actual token>' --- [0]: Bearer, [1]: Token */

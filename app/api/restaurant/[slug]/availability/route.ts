@@ -1,8 +1,6 @@
 import { NextRequest } from 'next/server';
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '@/lib/prisma';
 import { findAvailableTables } from '../../../../../services/restaurant/findAvailableTables';
-
-const prisma = new PrismaClient();
 
 // Note: request with +1hr in the URL!!!
 // example URL with queries:

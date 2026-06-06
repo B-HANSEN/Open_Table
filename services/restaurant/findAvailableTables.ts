@@ -1,7 +1,6 @@
-import { PrismaClient, Table } from '@prisma/client';
+import { Table } from '@prisma/client';
+import { prisma } from '@/lib/prisma';
 import { times } from '../../data';
-
-const prisma = new PrismaClient();
 
 export const findAvailableTables = async ({
 	time,

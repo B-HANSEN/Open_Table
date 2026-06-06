@@ -1,6 +1,5 @@
-import { PRICE, PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import { PRICE } from '@prisma/client';
+import { prisma } from '@/lib/prisma';
 
 export async function GET() {
 	await prisma.table.deleteMany();

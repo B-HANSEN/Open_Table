@@ -1,11 +1,9 @@
 import { NextRequest } from 'next/server';
 import validator from 'validator';
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '@/lib/prisma';
 import bcrypt from 'bcrypt';
 import * as jose from 'jose'; // jose to create a manufactured JWT (avoid issues with SSR apps, avoid JWT here)
 import { cookies } from 'next/headers';
-
-const prisma = new PrismaClient();
 
 export async function POST(request: NextRequest) {
 	const { firstName, lastName, email, phone, city, password } = await request.json();

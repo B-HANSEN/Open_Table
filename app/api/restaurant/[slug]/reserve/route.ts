@@ -1,8 +1,6 @@
 import { NextRequest } from 'next/server';
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '@/lib/prisma';
 import { findAvailableTables } from '../../../../../services/restaurant/findAvailableTables';
-
-const prisma = new PrismaClient();
 
 // Note: request with +1hr in the URL!!!
 // http://localhost:3000/api/restaurant/vivaan-fine-indian-cuisine-ottawa/reserve?day=2023-02-03&time=15:00:00.000Z&partySize=4

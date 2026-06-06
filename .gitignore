@@ -35,6 +35,9 @@ db_opentable.backup
 # vercel
 .vercel
 
+# prisma generated client
+/generated/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
