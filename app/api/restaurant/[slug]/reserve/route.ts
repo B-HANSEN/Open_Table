@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { findAvailableTables } from '../../../../../services/restaurant/findAvailableTables';
+import { availabilityQuerySchema, bookerSchema } from '@/lib/schemas';
 
 // Note: request with +1hr in the URL!!!
 // http://localhost:3000/api/restaurant/vivaan-fine-indian-cuisine-ottawa/reserve?day=2023-02-03&time=15:00:00.000Z&partySize=4
@@ -11,9 +12,25 @@ export async function POST(
 ) {
 	const { slug } = await params;
 	const { searchParams } = request.nextUrl;
-	const day = searchParams.get('day') as string;
-	const time = searchParams.get('time') as string;
-	const partySize = searchParams.get('partySize') as string;
+
+	const queryResult = availabilityQuerySchema.safeParse({
+		day: searchParams.get('day'),
+		time: searchParams.get('time'),
+		partySize: searchParams.get('partySize'),
+	});
+
+	if (!queryResult.success) {
+		return Response.json({ errorMessage: 'Invalid data provided.' }, { status: 400 });
+	}
+
+	const { day, time, partySize } = queryResult.data;
+
+	const bodyResult = bookerSchema.safeParse(await request.json());
+
+	if (!bodyResult.success) {
+		const errorMessage = bodyResult.error.issues[0].message;
+		return Response.json({ errorMessage }, { status: 400 });
+	}
 
 	const {
 		bookerEmail,
@@ -22,7 +39,7 @@ export async function POST(
 		bookerLastName,
 		bookerOccasion,
 		bookerRequest,
-	} = await request.json();
+	} = bodyResult.data;
 
 	const restaurant = await prisma.restaurant.findUnique({
 		where: { slug },
@@ -68,7 +85,7 @@ export async function POST(
 	}); // tablesCount: { "2": [3], "4": [1, 2] } --- table id 3 has 2 seats
 
 	const tablesToBook: number[] = [];
-	let seatsRemaining = parseInt(partySize);
+	let seatsRemaining = partySize;
 
 	while (seatsRemaining > 0) {
 		if (seatsRemaining >= 3) {
@@ -96,7 +113,7 @@ export async function POST(
 
 	const booking = await prisma.booking.create({
 		data: {
-			number_of_people: parseInt(partySize),
+			number_of_people: partySize,
 			booking_time: new Date(`${day}T${time}`),
 			booker_email: bookerEmail,
 			booker_phone: bookerPhone,

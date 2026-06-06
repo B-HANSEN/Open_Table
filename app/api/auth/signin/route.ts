@@ -1,32 +1,20 @@
 import { NextRequest } from 'next/server';
-import validator from 'validator';
 import { prisma } from '@/lib/prisma';
 import bcrypt from 'bcrypt';
 import * as jose from 'jose'; // jose to create a manufactured JWT (avoid issues with SSR apps, avoid JWT here)
 import { cookies } from 'next/headers';
+import { signinSchema } from '@/lib/schemas';
 
 export async function POST(request: NextRequest) {
-	const errors: string[] = [];
-	const { email, password } = await request.json();
+	const body = await request.json();
+	const result = signinSchema.safeParse(body);
 
-	const validationSchema = [
-		{
-			valid: validator.isEmail(email),
-			errorMessage: 'Email is invalid.',
-		},
-		{
-			valid: validator.isLength(password, { min: 1 }),
-			errorMessage: 'Password is invalid.',
-		},
-	];
-
-	validationSchema.forEach((check) => {
-		if (!check.valid) errors.push(check.errorMessage);
-	});
-
-	if (errors.length) {
-		return Response.json({ errorMessage: errors[0] }, { status: 400 });
+	if (!result.success) {
+		const errorMessage = result.error.issues[0].message;
+		return Response.json({ errorMessage }, { status: 400 });
 	}
+
+	const { email, password } = result.data;
 
 	const user = await prisma.user.findUnique({ where: { email } });
 	if (!user) {

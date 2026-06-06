@@ -1,48 +1,20 @@
 import { NextRequest } from 'next/server';
-import validator from 'validator';
 import { prisma } from '@/lib/prisma';
 import bcrypt from 'bcrypt';
 import * as jose from 'jose'; // jose to create a manufactured JWT (avoid issues with SSR apps, avoid JWT here)
 import { cookies } from 'next/headers';
+import { signupSchema } from '@/lib/schemas';
 
 export async function POST(request: NextRequest) {
-	const { firstName, lastName, email, phone, city, password } = await request.json();
-	const errors: string[] = [];
+	const body = await request.json();
+	const result = signupSchema.safeParse(body);
 
-	const validationSchema = [
-		{
-			valid: validator.isLength(firstName, { min: 1, max: 20 }),
-			errorMessage: 'First name is invalid',
-		},
-		{
-			valid: validator.isLength(lastName, { min: 1, max: 20 }),
-			errorMessage: 'Last name is invalid',
-		},
-		{
-			valid: validator.isEmail(email),
-			errorMessage: 'Email is invalid',
-		},
-		{
-			valid: validator.isMobilePhone(phone),
-			errorMessage: 'Phone number is invalid',
-		},
-		{
-			valid: validator.isLength(city, { min: 1 }),
-			errorMessage: 'City is invalid',
-		},
-		{
-			valid: validator.isStrongPassword(password),
-			errorMessage: 'Password is not strong enough',
-		},
-	];
-
-	validationSchema.forEach((check) => {
-		if (!check.valid) errors.push(check.errorMessage);
-	});
-
-	if (errors.length) {
-		return Response.json({ errorMessage: errors[0] }, { status: 400 });
+	if (!result.success) {
+		const errorMessage = result.error.issues[0].message;
+		return Response.json({ errorMessage }, { status: 400 });
 	}
+
+	const { firstName, lastName, email, phone, city, password } = result.data;
 
 	const hashedPassword = await bcrypt.hash(password, 10); // add 10 characters (the salt) to the right, then hash the password
 

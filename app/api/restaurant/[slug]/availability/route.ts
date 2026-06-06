@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { findAvailableTables } from '../../../../../services/restaurant/findAvailableTables';
+import { availabilityQuerySchema } from '@/lib/schemas';
 
 // Note: request with +1hr in the URL!!!
 // example URL with queries:
@@ -12,13 +13,18 @@ export async function GET(
 ) {
 	const { slug } = await params;
 	const { searchParams } = request.nextUrl;
-	const day = searchParams.get('day') as string;
-	const time = searchParams.get('time') as string;
-	const partySize = searchParams.get('partySize') as string;
 
-	if (!day || !time || !partySize) {
+	const queryResult = availabilityQuerySchema.safeParse({
+		day: searchParams.get('day'),
+		time: searchParams.get('time'),
+		partySize: searchParams.get('partySize'),
+	});
+
+	if (!queryResult.success) {
 		return Response.json({ errorMessage: 'Invalid data provided.' }, { status: 400 });
 	}
+
+	const { day, time, partySize } = queryResult.data;
 
 	// get all tables and operating times in the [slug] restaurant:
 	const restaurant = await prisma.restaurant.findUnique({
@@ -42,7 +48,7 @@ export async function GET(
 			const sumSeats = t.tables.reduce((sum, table) => sum + table.seats, 0);
 			return {
 				time: t.time, // return searchTime itself
-				available: sumSeats >= parseInt(partySize), // return available status
+				available: sumSeats >= partySize, // return available status
 			};
 		})
 		.filter((availability) => {
