@@ -34,6 +34,7 @@ const AuthModal = ({ isSignin }: { isSignin: boolean }) => {
 		phone: '',
 		city: '',
 		password: '',
+		confirmPassword: '',
 	});
 
 	const [disabled, setDisabled] = useState(true);
@@ -49,6 +50,8 @@ const AuthModal = ({ isSignin }: { isSignin: boolean }) => {
 				inputs.lastName &&
 				inputs.email &&
 				inputs.password &&
+				inputs.confirmPassword &&
+				inputs.password === inputs.confirmPassword &&
 				inputs.city &&
 				inputs.phone
 			) {

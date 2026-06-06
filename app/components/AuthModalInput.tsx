@@ -8,6 +8,7 @@ interface Props {
 		phone: string;
 		city: string;
 		password: string;
+		confirmPassword: string;
 	};
 	handleChangeInput: (e: React.ChangeEvent<HTMLInputElement>) => void;
 	isSignin: boolean;
@@ -82,6 +83,22 @@ const AuthModalInput = ({ inputs, handleChangeInput, isSignin }: Props) => {
 					value={inputs.password}
 				/>
 			</div>
+			{isSignin ? null : (
+				<div className='my-3 flex flex-col text-sm'>
+					<input
+						aria-label='Confirm password'
+						className='border rounded p-2 py-3 w-full'
+						name='confirmPassword'
+						onChange={handleChangeInput}
+						placeholder='Confirm password'
+						type='password'
+						value={inputs.confirmPassword}
+					/>
+					{inputs.confirmPassword && inputs.password !== inputs.confirmPassword && (
+						<p className='text-red-500 mt-1'>Passwords do not match</p>
+					)}
+				</div>
+			)}
 		</>
 	);
 };
