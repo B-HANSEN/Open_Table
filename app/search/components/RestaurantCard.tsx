@@ -1,5 +1,5 @@
 import { Cuisine, Location, PRICE, Review } from '@prisma/client';
-import Image from 'next/image';
+import ImageWithFallback from '../../components/ImageWithFallback';
 import Link from 'next/link';
 import { calculateReviewRatingAverage } from '../../../utils/calculateReviewRatingAverage';
 import Price from '../../components/Price';
@@ -29,7 +29,7 @@ const RestaurantCard = ({ item }: { item: Restaurant }) => {
 	return (
 		<div className='border-b flex pb-5 ml-4'>
 			<div className='relative w-44 h-32 shrink-0'>
-				<Image
+				<ImageWithFallback
 					alt={item.name}
 					className='rounded object-cover'
 					fill

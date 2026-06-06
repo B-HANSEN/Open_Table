@@ -1,4 +1,4 @@
-import Image from 'next/image';
+import ImageWithFallback from './ImageWithFallback';
 import Link from 'next/link';
 import { RestaurantCardType } from '../page';
 import Price from './Price';
@@ -13,7 +13,7 @@ export default function RestaurantCard({ restaurant }: Props) {
 		<div className='w-64 m-3 overflow-hidden border rounded cursor-pointer h-72'>
 			<Link href={`/restaurant/${restaurant.slug}`}>
 				<div className='relative w-full h-36'>
-					<Image
+					<ImageWithFallback
 						alt={restaurant.name}
 						className='object-cover'
 						fill

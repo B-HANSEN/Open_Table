@@ -1,4 +1,4 @@
-import Image from 'next/image';
+import ImageWithFallback from '@/app/components/ImageWithFallback';
 
 export default function Images({ images }: { images: string[] }) {
 	return (
@@ -9,7 +9,7 @@ export default function Images({ images }: { images: string[] }) {
 			<div className='flex flex-wrap'>
 				{images.map((image, index) => (
 					<div key={index} className='relative w-56 h-44 mr-1 mb-1'>
-						<Image
+						<ImageWithFallback
 							alt=''
 							className='object-cover'
 							fill

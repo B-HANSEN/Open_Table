@@ -37,6 +37,7 @@ Notes: limited functionality due to dataset in database
 A React 19 application built with Next.js 16 and TypeScript.
 Middleware to verify JWTs and handle authentication.
 Prisma to communicate with a PostgreSQL database on Neon (neon.tech).
+Zod for schema validation of API inputs and form data.
 
 ### Live Demo
 
