@@ -29,7 +29,7 @@ export const findAvailableTables = async ({
 		where: {
 			booking_time: {
 				gte: new Date(`${day}T${searchTimes[0]}`), // >= to first value in range
-				lte: new Date(`${day}T${searchTimes[searchTimes.length - 4]}`), // <= to last value in range
+				lte: new Date(`${day}T${searchTimes[searchTimes.length - 1]}`), // <= to last value in range
 			},
 		},
 		select: {
