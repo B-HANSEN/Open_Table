@@ -26,8 +26,12 @@ export default function useAvailabilities() {
 				params: { day, time, partySize },
 			})
 			setData(response.data)
-		} catch (error: any) {
-			setError(error.response?.data?.errorMessage ?? 'Something went wrong.')
+		} catch (error) {
+			setError(
+				axios.isAxiosError(error)
+					? (error.response?.data?.errorMessage ?? 'Something went wrong.')
+					: 'Something went wrong.'
+			)
 		} finally {
 			setLoading(false)
 		}

@@ -44,11 +44,9 @@ export const findAvailableTables = async ({
 
 	bookings.forEach((booking) => {
 		bookingsTableObject[booking.booking_time.toISOString()] = // booking_time is in ISO format, turn into a string
-			booking.tables.reduce((obj, table) => {
-				return {
-					...obj,
-					[table.table_id]: true,
-				}
+			booking.tables.reduce<{ [key: number]: true }>((obj, table) => {
+				obj[table.table_id] = true
+				return obj
 			}, {})
 	})
 

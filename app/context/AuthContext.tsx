@@ -73,10 +73,12 @@ export default function AuthContext({
 				error: null,
 				loading: false,
 			})
-		} catch (error: any) {
+		} catch (error) {
 			setAuthState({
 				data: null,
-				error: error.response.data.errorMessage,
+				error: axios.isAxiosError(error)
+					? (error.response?.data?.errorMessage ?? 'Something went wrong.')
+					: 'Something went wrong.',
 				loading: false,
 			})
 		}

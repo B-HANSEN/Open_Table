@@ -50,9 +50,13 @@ export default function useReservation() {
 			setLoading(false)
 			setDidBook(true)
 			return response.data
-		} catch (error: any) {
+		} catch (error) {
 			setLoading(false)
-			setError(error.response.data.errorMessage)
+			setError(
+				axios.isAxiosError(error)
+					? (error.response?.data?.errorMessage ?? 'Something went wrong.')
+					: 'Something went wrong.'
+			)
 		}
 	}
 

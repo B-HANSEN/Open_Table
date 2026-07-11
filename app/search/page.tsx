@@ -1,4 +1,4 @@
-import type { PRICE } from '@prisma/client'
+import type { PRICE, Prisma } from '@prisma/client'
 import { prisma } from '@/lib/prisma'
 import Header from './components/Header'
 import RestaurantCard from './components/RestaurantCard'
@@ -11,7 +11,7 @@ interface SearchParams {
 }
 
 const fetchRestaurantByCity = (searchParams: SearchParams) => {
-	const where: any = {}
+	const where: Prisma.RestaurantWhereInput = {}
 
 	if (searchParams.city) {
 		const location = {
