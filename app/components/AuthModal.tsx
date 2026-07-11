@@ -1,12 +1,12 @@
-'use client'; // using global context requires to use client components!!
+'use client' // using global context requires to use client components!!
 
-import { useEffect, useState, useContext } from 'react';
-import Box from '@mui/material/Box';
-import Modal from '@mui/material/Modal';
-import AuthModalInput from './AuthModalInput';
-import { AuthenticationContext } from '../context/AuthContext';
-import useAuth from '../../hooks/useAuth';
-import { Alert, CircularProgress } from '@mui/material';
+import { Alert, CircularProgress } from '@mui/material'
+import Box from '@mui/material/Box'
+import Modal from '@mui/material/Modal'
+import { useContext, useEffect, useState } from 'react'
+import useAuth from '../../hooks/useAuth'
+import { AuthenticationContext } from '../context/AuthContext'
+import AuthModalInput from './AuthModalInput'
 
 const style = {
 	position: 'absolute' as 'absolute',
@@ -17,15 +17,15 @@ const style = {
 	bgcolor: 'background.paper',
 	boxShadow: 24,
 	p: 4,
-};
+}
 
 const AuthModal = ({ isSignin }: { isSignin: boolean }) => {
 	// basic MUI modal
-	const [open, setOpen] = useState(false);
-	const handleOpen = () => setOpen(true);
-	const handleClose = () => setOpen(false);
-	const { signin, signup } = useAuth();
-	const { loading, error, data } = useContext(AuthenticationContext);
+	const [open, setOpen] = useState(false)
+	const handleOpen = () => setOpen(true)
+	const handleClose = () => setOpen(false)
+	const { signin, signup } = useAuth()
+	const { loading, error } = useContext(AuthenticationContext)
 
 	const [inputs, setInputs] = useState({
 		firstName: '',
@@ -35,14 +35,14 @@ const AuthModal = ({ isSignin }: { isSignin: boolean }) => {
 		city: '',
 		password: '',
 		confirmPassword: '',
-	});
+	})
 
-	const [disabled, setDisabled] = useState(true);
+	const [disabled, setDisabled] = useState(true)
 
 	useEffect(() => {
 		if (isSignin) {
 			if (inputs.password && inputs.email) {
-				return setDisabled(false);
+				return setDisabled(false)
 			}
 		} else {
 			if (
@@ -55,30 +55,30 @@ const AuthModal = ({ isSignin }: { isSignin: boolean }) => {
 				inputs.city &&
 				inputs.phone
 			) {
-				return setDisabled(false);
+				return setDisabled(false)
 			}
 		}
-		setDisabled(true);
-	}, [inputs]);
+		setDisabled(true)
+	}, [inputs, isSignin])
 
 	const handleClick = () => {
 		if (isSignin) {
-			signin({ email: inputs.email, password: inputs.password }, handleClose);
+			signin({ email: inputs.email, password: inputs.password }, handleClose)
 		} else {
-			signup(inputs, handleClose);
+			signup(inputs, handleClose)
 		}
-	};
+	}
 
 	const renderContent = (signinContent: string, signupContent: string) => {
-		return isSignin ? signinContent : signupContent;
-	};
+		return isSignin ? signinContent : signupContent
+	}
 
 	const handleChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setInputs({
 			...inputs,
 			[e.target.name]: e.target.value,
-		});
-	};
+		})
+	}
 
 	return (
 		<div>
@@ -87,8 +87,9 @@ const AuthModal = ({ isSignin }: { isSignin: boolean }) => {
 					// render styles and button text conditionally
 					'bg-blue-400 text-white',
 					''
-				)} border p-1 px-4 rounded mr-3`}
+				)} mr-3 rounded border p-1 px-4`}
 				onClick={handleOpen}
+				type='button'
 			>
 				{renderContent('Sign in', 'Sign up')}
 			</button>
@@ -100,23 +101,23 @@ const AuthModal = ({ isSignin }: { isSignin: boolean }) => {
 			>
 				<Box sx={style}>
 					{loading ? (
-						<div className='py-24 h-[600px] flex justify-center'>
+						<div className='flex h-[600px] justify-center py-24'>
 							<CircularProgress />
 						</div>
 					) : (
-						<div className='p-2 h-[600px]'>
+						<div className='h-[600px] p-2'>
 							{error && (
 								<Alert className='mb-4' severity='error'>
 									{error}
 								</Alert>
 							)}
-							<div className='uppcase font-bold text-center pb-2 border-b mb-2'>
+							<div className='uppcase mb-2 border-b pb-2 text-center font-bold'>
 								<p className='text-sm'>
 									{renderContent('Sign in', 'Create account')}
 								</p>
 							</div>
 							<div className='m-auto'>
-								<h2 className='text-2xl font-light text-center'>
+								<h2 className='text-center font-light text-2xl'>
 									{renderContent(
 										'Log Into Your Account',
 										'Create Your OpenTable Account'
@@ -128,9 +129,10 @@ const AuthModal = ({ isSignin }: { isSignin: boolean }) => {
 									isSignin={isSignin}
 								/>
 								<button
-									className='uppercase bg-red-600 w-full text-white p-3 rounded text-sm mb-5 disabled:bg-gray-400'
+									className='mb-5 w-full rounded bg-red-600 p-3 text-sm text-white uppercase disabled:bg-gray-400'
 									disabled={disabled}
 									onClick={handleClick}
+									type='button'
 								>
 									{renderContent('Sign in', 'Create account')}
 								</button>
@@ -140,7 +142,7 @@ const AuthModal = ({ isSignin }: { isSignin: boolean }) => {
 				</Box>
 			</Modal>
 		</div>
-	);
-};
+	)
+}
 
-export default AuthModal;
+export default AuthModal

@@ -1,29 +1,29 @@
-'use client';
+'use client'
 
-import { useEffect, useState } from 'react';
-import NavBar from './components/NavBar';
-import AuthContext from './context/AuthContext';
-import './globals.css';
-import 'react-datepicker/dist/react-datepicker.css';
+import { useEffect, useState } from 'react'
+import NavBar from './components/NavBar'
+import AuthContext from './context/AuthContext'
+import './globals.css'
+import 'react-datepicker/dist/react-datepicker.css'
 
 export default function RootLayout({
 	children,
 }: {
-	children: React.ReactNode;
+	children: React.ReactNode
 }) {
-	const [mounted, setMounted] = useState(false); // avoid wakeable.then error: work with useEffect for checking if it's mounted on the client
+	const [mounted, setMounted] = useState(false) // avoid wakeable.then error: work with useEffect for checking if it's mounted on the client
 
 	useEffect(() => {
-		setMounted(true);
-	}, []);
+		setMounted(true)
+	}, [])
 
 	if (!mounted)
 		return (
-			<html>
+			<html lang='en'>
 				<head />
 				<body></body>
 			</html>
-		);
+		)
 
 	return (
 		<html lang='en'>
@@ -33,9 +33,9 @@ export default function RootLayout({
       */}
 			<head />
 			<body>
-				<main className='bg-gray-100 min-h-screen w-screen'>
+				<main className='min-h-screen w-screen bg-gray-100'>
 					<AuthContext>
-						<main className='max-w-screen-2xl m-auto bg-white'>
+						<main className='m-auto max-w-screen-2xl bg-white'>
 							<NavBar />
 							{children}
 						</main>
@@ -43,5 +43,5 @@ export default function RootLayout({
 				</main>
 			</body>
 		</html>
-	);
+	)
 }

@@ -1,19 +1,19 @@
-'use client';
+'use client'
 
-import Image from 'next/image';
-import errorMascot from '../../public/icons/error.png';
+import Image from 'next/image'
+import errorMascot from '../../public/icons/error.png'
 
-const Error = ({ error }: { error: Error }) => {
+const ErrorPage = ({ error }: { error: Error }) => {
 	return (
-		<div className='h-screen bg-gray-400 flex flex-col justify-center items-center'>
-			<Image alt='error' className='w-56 mb-8' src={errorMascot} />
-			<div className='bg-white px-9 py-14 shadow rounded'>
-				<h3 className='text-3xl font-bold'>Well, this is embarrassing</h3>
-				<p className='text-reg font-bold'>{error.message}</p>
-				<p className='mt-6 text-sm font-light'>Error Code: 400</p>
+		<div className='flex h-screen flex-col items-center justify-center bg-gray-400'>
+			<Image alt='error' className='mb-8 w-56' src={errorMascot} />
+			<div className='rounded bg-white px-9 py-14 shadow'>
+				<h3 className='font-bold text-3xl'>Well, this is embarrassing</h3>
+				<p className='font-bold text-reg'>{error.message}</p>
+				<p className='mt-6 font-light text-sm'>Error Code: 400</p>
 			</div>
 		</div>
-	);
-};
+	)
+}
 
-export default Error;
+export default ErrorPage

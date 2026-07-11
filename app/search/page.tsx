@@ -1,25 +1,25 @@
-import { PRICE } from '@prisma/client';
-import { prisma } from '@/lib/prisma';
-import Header from './components/Header';
-import RestaurantCard from './components/RestaurantCard';
-import SearchSidebar from './components/SearchSidebar';
+import type { PRICE } from '@prisma/client'
+import { prisma } from '@/lib/prisma'
+import Header from './components/Header'
+import RestaurantCard from './components/RestaurantCard'
+import SearchSidebar from './components/SearchSidebar'
 
 interface SearchParams {
-	city?: string;
-	cuisine?: string;
-	price?: PRICE;
+	city?: string
+	cuisine?: string
+	price?: PRICE
 }
 
 const fetchRestaurantByCity = (searchParams: SearchParams) => {
-	const where: any = {};
+	const where: any = {}
 
 	if (searchParams.city) {
 		const location = {
 			name: {
 				equals: searchParams.city.toLowerCase(),
 			},
-		};
-		where.location = location;
+		}
+		where.location = location
 	}
 
 	if (searchParams.cuisine) {
@@ -27,15 +27,15 @@ const fetchRestaurantByCity = (searchParams: SearchParams) => {
 			name: {
 				equals: searchParams.cuisine.toLowerCase(),
 			},
-		};
-		where.cuisine = cuisine;
+		}
+		where.cuisine = cuisine
 	}
 
 	if (searchParams.price) {
 		const price = {
 			equals: searchParams.price,
-		};
-		where.price = price;
+		}
+		where.price = price
 	}
 
 	const select = {
@@ -47,29 +47,29 @@ const fetchRestaurantByCity = (searchParams: SearchParams) => {
 		location: true,
 		slug: true,
 		reviews: true,
-	};
+	}
 
-	return prisma.restaurant.findMany({ where, select });
-};
+	return prisma.restaurant.findMany({ where, select })
+}
 
-const fetchLocations = () => prisma.location.findMany();
+const fetchLocations = () => prisma.location.findMany()
 
-const fetchCuisines = () => prisma.cuisine.findMany();
+const fetchCuisines = () => prisma.cuisine.findMany()
 
 const Search = async ({
 	searchParams,
 }: {
-	searchParams: Promise<SearchParams>;
+	searchParams: Promise<SearchParams>
 }) => {
-	const resolvedSearchParams = await searchParams;
-	const restaurants = await fetchRestaurantByCity(resolvedSearchParams);
-	const locations = await fetchLocations();
-	const cuisines = await fetchCuisines();
+	const resolvedSearchParams = await searchParams
+	const restaurants = await fetchRestaurantByCity(resolvedSearchParams)
+	const locations = await fetchLocations()
+	const cuisines = await fetchCuisines()
 
 	return (
 		<>
 			<Header />
-			<div className='flex py-4 m-auto w-2/3 justify-between items-start'>
+			<div className='m-auto flex w-2/3 items-start justify-between py-4'>
 				<SearchSidebar
 					cuisines={cuisines}
 					locations={locations}
@@ -78,7 +78,7 @@ const Search = async ({
 				<div className='w-5/6'>
 					{restaurants.length ? (
 						restaurants.map((item) => (
-							<RestaurantCard key={item.id} item={item} />
+							<RestaurantCard item={item} key={item.id} />
 						))
 					) : (
 						<div className='flex flex-wrap justify-between'>
@@ -88,7 +88,7 @@ const Search = async ({
 				</div>
 			</div>
 		</>
-	);
-};
+	)
+}
 
-export default Search;
+export default Search

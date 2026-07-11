@@ -1,21 +1,27 @@
-import { NextRequest } from 'next/server';
-import { prisma } from '@/lib/prisma';
-import jwt, { JwtPayload } from 'jsonwebtoken'; // jwt lib causes issues with SSR apps, use here for decoding payload only!
+import jwt from 'jsonwebtoken' // jwt lib causes issues with SSR apps, use here for decoding payload only!
+import type { NextRequest } from 'next/server'
+import { prisma } from '@/lib/prisma'
 
 /** when testing in Postman, add Headers:
  * Authorization with value 'Bearer <paste actual token>' --- [0]: Bearer, [1]: Token */
 
 export async function GET(request: NextRequest) {
-	const bearerToken = request.headers.get('authorization');
+	const bearerToken = request.headers.get('authorization')
 	if (!bearerToken) {
-		return Response.json({ errorMessage: 'Unauthorized request.' }, { status: 401 });
+		return Response.json(
+			{ errorMessage: 'Unauthorized request.' },
+			{ status: 401 }
+		)
 	}
 
-	const token = bearerToken.split(' ')[1]; // [0] is Bearer, [1] is the token
-	const payload = jwt.decode(token) as { email: string };
+	const token = bearerToken.split(' ')[1] // [0] is Bearer, [1] is the token
+	const payload = jwt.decode(token) as { email: string }
 
 	if (!payload?.email) {
-		return Response.json({ errorMessage: 'Unauthorized request.' }, { status: 401 });
+		return Response.json(
+			{ errorMessage: 'Unauthorized request.' },
+			{ status: 401 }
+		)
 	}
 
 	const user = await prisma.user.findUnique({
@@ -28,10 +34,10 @@ export async function GET(request: NextRequest) {
 			city: true,
 			phone: true,
 		},
-	});
+	})
 
 	if (!user) {
-		return Response.json({ errorMessage: 'User not found' }, { status: 401 });
+		return Response.json({ errorMessage: 'User not found' }, { status: 401 })
 	}
 
 	return Response.json({
@@ -40,5 +46,5 @@ export async function GET(request: NextRequest) {
 		lastName: user.last_name,
 		phone: user.phone,
 		city: user.city,
-	});
+	})
 }

@@ -47,11 +47,11 @@ const displayTimeObject = {
 	'22:30:00.000Z': '10:30 PM',
 	'23:00:00.000Z': '11:00 PM',
 	'23:30:00.000Z': '11:30 PM',
-};
+}
 
-export type Time = keyof typeof displayTimeObject; // use this as type as it requires only these specific string formats
+export type Time = keyof typeof displayTimeObject // use this as type as it requires only these specific string formats
 
 export const convertToDisplayTime = (time: Time) => {
 	// do not use string as type
-	return displayTimeObject[time];
-};
+	return displayTimeObject[time]
+}

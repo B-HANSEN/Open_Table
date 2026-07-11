@@ -1,10 +1,10 @@
-import { Review } from '@prisma/client';
-import ReviewCard from './ReviewCard';
+import type { Review } from '@prisma/client'
+import ReviewCard from './ReviewCard'
 
 export default function Reviews({ reviews }: { reviews: Review[] }) {
 	return (
 		<div>
-			<h1 className='font-bold text-3xl mt-10 mb-7 borber-b pb-5'>
+			<h1 className='borber-b mt-10 mb-7 pb-5 font-bold text-3xl'>
 				What {reviews.length} {reviews.length === 1 ? 'person' : 'people'} are
 				saying
 			</h1>
@@ -14,5 +14,5 @@ export default function Reviews({ reviews }: { reviews: Review[] }) {
 				))}
 			</div>
 		</div>
-	);
+	)
 }

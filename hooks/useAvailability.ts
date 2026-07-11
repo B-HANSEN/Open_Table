@@ -1,12 +1,12 @@
-import { useState } from 'react';
-import axios from 'axios';
+import axios from 'axios'
+import { useState } from 'react'
 
 export default function useAvailabilities() {
-	const [loading, setLoading] = useState(false);
-	const [error, setError] = useState(null);
+	const [loading, setLoading] = useState(false)
+	const [error, setError] = useState(null)
 	const [data, setData] = useState<
 		{ time: string; available: boolean }[] | null
-	>(null);
+	>(null)
 
 	const fetchAvailabilities = async ({
 		slug,
@@ -14,24 +14,24 @@ export default function useAvailabilities() {
 		day,
 		time,
 	}: {
-		slug: string;
-		partySize: string;
-		day: string;
-		time: string;
+		slug: string
+		partySize: string
+		day: string
+		time: string
 	}) => {
-		setLoading(true);
+		setLoading(true)
 
 		try {
 			const response = await axios.get(`/api/restaurant/${slug}/availability`, {
 				params: { day, time, partySize },
-			});
-			setData(response.data);
+			})
+			setData(response.data)
 		} catch (error: any) {
-			setError(error.response?.data?.errorMessage ?? 'Something went wrong.');
+			setError(error.response?.data?.errorMessage ?? 'Something went wrong.')
 		} finally {
-			setLoading(false);
+			setLoading(false)
 		}
-	};
+	}
 
-	return { loading, data, error, fetchAvailabilities };
+	return { loading, data, error, fetchAvailabilities }
 }

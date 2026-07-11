@@ -1,5 +1,4 @@
-import { PRICE } from '@prisma/client';
-import React from 'react';
+import { PRICE } from '@prisma/client'
 
 export default function Price({ price }: { price: PRICE }) {
 	const renderPrice = () => {
@@ -8,20 +7,16 @@ export default function Price({ price }: { price: PRICE }) {
 				<>
 					<span>$$</span> <span className='text-gray-500'>$$</span>
 				</>
-			);
+			)
 		} else if (price === PRICE.REGULAR) {
 			return (
 				<>
 					<span>$$$</span> <span className='text-gray-500'>$</span>
 				</>
-			);
+			)
 		} else {
-			return (
-				<>
-					<span>$$$$</span>
-				</>
-			);
+			return <span>$$$$</span>
 		}
-	};
-	return <p className='flex mr-3'>{renderPrice()}</p>;
+	}
+	return <p className='mr-3 flex'>{renderPrice()}</p>
 }

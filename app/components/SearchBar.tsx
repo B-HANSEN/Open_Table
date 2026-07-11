@@ -1,29 +1,29 @@
-'use client'; // to convert from server component to client component to utilise useRouter()-hook
+'use client' // to convert from server component to client component to utilise useRouter()-hook
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 
 export default function SearchBar() {
-	const router = useRouter();
-	const [location, setLocation] = useState('');
+	const router = useRouter()
+	const [location, setLocation] = useState('')
 
 	const handleSubmit = (e: React.FormEvent) => {
-		e.preventDefault();
-		if (location === '') return;
-		router.push(`/search/?city=${location}`);
-		setLocation('');
-	};
+		e.preventDefault()
+		if (location === '') return
+		router.push(`/search/?city=${location}`)
+		setLocation('')
+	}
 
 	return (
 		<form
-			className='text-left text-lg py-3 m-auto flex justify-center'
+			className='m-auto flex justify-center py-3 text-left text-lg'
 			onSubmit={handleSubmit}
 		>
 			<label className='sr-only' htmlFor='location-search'>
 				Search by state, city or town
 			</label>
 			<input
-				className='rounded mr-3 p-3 w-[450px] bg-white text-gray-900 placeholder:text-gray-500 shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white'
+				className='mr-3 w-[450px] rounded bg-white p-3 text-gray-900 shadow-lg placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2'
 				id='location-search'
 				onChange={(e) => setLocation(e.target.value)}
 				placeholder='State, city or town'
@@ -34,5 +34,5 @@ export default function SearchBar() {
 				Let's go
 			</button>
 		</form>
-	);
+	)
 }

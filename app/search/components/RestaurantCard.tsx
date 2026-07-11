@@ -1,34 +1,34 @@
-import { Cuisine, Location, PRICE, Review } from '@prisma/client';
-import ImageWithFallback from '../../components/ImageWithFallback';
-import Link from 'next/link';
-import { calculateReviewRatingAverage } from '../../../utils/calculateReviewRatingAverage';
-import Price from '../../components/Price';
-import Stars from '../../components/Stars';
+import type { Cuisine, Location, PRICE, Review } from '@prisma/client'
+import Link from 'next/link'
+import { calculateReviewRatingAverage } from '../../../utils/calculateReviewRatingAverage'
+import ImageWithFallback from '../../components/ImageWithFallback'
+import Price from '../../components/Price'
+import Stars from '../../components/Stars'
 
 interface Restaurant {
-	main_image: string;
-	name: string;
-	price: PRICE;
-	cuisine: Cuisine;
-	location: Location;
-	id: number;
-	slug: string;
-	reviews: Review[];
+	main_image: string
+	name: string
+	price: PRICE
+	cuisine: Cuisine
+	location: Location
+	id: number
+	slug: string
+	reviews: Review[]
 }
 
 const RestaurantCard = ({ item }: { item: Restaurant }) => {
 	const renderRatingText = () => {
-		const rating = calculateReviewRatingAverage(item.reviews);
+		const rating = calculateReviewRatingAverage(item.reviews)
 
-		if (rating > 4) return 'Awesome';
-		else if (rating <= 4 && rating > 3) return 'Good';
-		else if (rating <= 3 && rating > 0) return 'Average';
-		else return '';
-	};
+		if (rating > 4) return 'Awesome'
+		else if (rating <= 4 && rating > 3) return 'Good'
+		else if (rating <= 3 && rating > 0) return 'Average'
+		else return ''
+	}
 
 	return (
-		<div className='border-b flex pb-5 ml-4'>
-			<div className='relative w-44 h-32 shrink-0'>
+		<div className='ml-4 flex border-b pb-5'>
+			<div className='relative h-32 w-44 shrink-0'>
 				<ImageWithFallback
 					alt={item.name}
 					className='rounded object-cover'
@@ -40,13 +40,13 @@ const RestaurantCard = ({ item }: { item: Restaurant }) => {
 			<div className='pl-5'>
 				<h2 className='text-3xl'>{item.name}</h2>
 				<div className='flex items-start'>
-					<div className='flex mb-2'>
+					<div className='mb-2 flex'>
 						<Stars reviews={item.reviews} />
 					</div>
 					<p className='ml-2 text-sm'>{renderRatingText()}</p>
 				</div>
 				<div className='mb-9'>
-					<div className='font-light flex text-reg'>
+					<div className='flex font-light text-reg'>
 						<Price price={item.price} />
 						<p className='mr-4 capitalize'>{item.cuisine.name}</p>
 						<p className='mr-4 capitalize'>{item.location.name}</p>
@@ -59,7 +59,7 @@ const RestaurantCard = ({ item }: { item: Restaurant }) => {
 				</div>
 			</div>
 		</div>
-	);
-};
+	)
+}
 
-export default RestaurantCard;
+export default RestaurantCard

@@ -1,18 +1,18 @@
-import ImageWithFallback from './ImageWithFallback';
-import Link from 'next/link';
-import { RestaurantCardType } from '../page';
-import Price from './Price';
-import Stars from './Stars';
+import Link from 'next/link'
+import type { RestaurantCardType } from '../page'
+import ImageWithFallback from './ImageWithFallback'
+import Price from './Price'
+import Stars from './Stars'
 
 interface Props {
-	restaurant: RestaurantCardType;
+	restaurant: RestaurantCardType
 }
 
 export default function RestaurantCard({ restaurant }: Props) {
 	return (
-		<div className='w-64 m-3 overflow-hidden border rounded cursor-pointer h-72'>
+		<div className='m-3 h-72 w-64 cursor-pointer overflow-hidden rounded border'>
 			<Link href={`/restaurant/${restaurant.slug}`}>
-				<div className='relative w-full h-36'>
+				<div className='relative h-36 w-full'>
 					<ImageWithFallback
 						alt={restaurant.name}
 						className='object-cover'
@@ -22,7 +22,7 @@ export default function RestaurantCard({ restaurant }: Props) {
 					/>
 				</div>
 				<div className='p-1'>
-					<h3 className='mb-2 text-2xl font-bold'>{restaurant.name}</h3>
+					<h3 className='mb-2 font-bold text-2xl'>{restaurant.name}</h3>
 					<div className='flex items-start'>
 						<Stars reviews={restaurant.reviews} />
 						<p className='ml-2'>
@@ -30,14 +30,14 @@ export default function RestaurantCard({ restaurant }: Props) {
 							{restaurant.reviews.length === 1 ? '' : 's'}{' '}
 						</p>
 					</div>
-					<div className='flex font-light capitalize text-reg'>
+					<div className='flex font-light text-reg capitalize'>
 						<p className='mr-3'>{restaurant.cuisine.name}</p>
 						<Price price={restaurant.price} />
 						<p>{restaurant.location.name}</p>
 					</div>
-					<p className='mt-1 text-sm font-bold'>Booked 3 times today</p>
+					<p className='mt-1 font-bold text-sm'>Booked 3 times today</p>
 				</div>
 			</Link>
 		</div>
-	);
+	)
 }

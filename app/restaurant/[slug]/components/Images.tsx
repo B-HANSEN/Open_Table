@@ -1,14 +1,14 @@
-import ImageWithFallback from '@/app/components/ImageWithFallback';
+import ImageWithFallback from '@/app/components/ImageWithFallback'
 
 export default function Images({ images }: { images: string[] }) {
 	return (
 		<div>
-			<h1 className='font-bold text-3xl mt-10 mb-7 border-b pb-5'>
+			<h1 className='mt-10 mb-7 border-b pb-5 font-bold text-3xl'>
 				{images.length} photo{images.length > 1 ? 's' : ''}
 			</h1>
 			<div className='flex flex-wrap'>
-				{images.map((image, index) => (
-					<div key={index} className='relative w-56 h-44 mr-1 mb-1'>
+				{images.map((image, _index) => (
+					<div className='relative mr-1 mb-1 h-44 w-56' key={image}>
 						<ImageWithFallback
 							alt=''
 							className='object-cover'
@@ -20,5 +20,5 @@ export default function Images({ images }: { images: string[] }) {
 				))}
 			</div>
 		</div>
-	);
+	)
 }

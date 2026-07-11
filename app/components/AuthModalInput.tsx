@@ -1,17 +1,17 @@
-import React from 'react';
+import type React from 'react'
 
 interface Props {
 	inputs: {
-		firstName: string;
-		lastName: string;
-		email: string;
-		phone: string;
-		city: string;
-		password: string;
-		confirmPassword: string;
-	};
-	handleChangeInput: (e: React.ChangeEvent<HTMLInputElement>) => void;
-	isSignin: boolean;
+		firstName: string
+		lastName: string
+		email: string
+		phone: string
+		city: string
+		password: string
+		confirmPassword: string
+	}
+	handleChangeInput: (e: React.ChangeEvent<HTMLInputElement>) => void
+	isSignin: boolean
 }
 
 const AuthModalInput = ({ inputs, handleChangeInput, isSignin }: Props) => {
@@ -21,7 +21,7 @@ const AuthModalInput = ({ inputs, handleChangeInput, isSignin }: Props) => {
 				<div className='my-3 flex justify-between text-sm'>
 					<input
 						aria-label='First name'
-						className='border rounded p-2 py-3 w-[49%]'
+						className='w-[49%] rounded border p-2 py-3'
 						name='firstName'
 						onChange={handleChangeInput}
 						placeholder='First name'
@@ -30,7 +30,7 @@ const AuthModalInput = ({ inputs, handleChangeInput, isSignin }: Props) => {
 					/>
 					<input
 						aria-label='Last name'
-						className='border rounded p-2 py-3 w-[49%]'
+						className='w-[49%] rounded border p-2 py-3'
 						name='lastName'
 						onChange={handleChangeInput}
 						placeholder='Last name'
@@ -42,7 +42,7 @@ const AuthModalInput = ({ inputs, handleChangeInput, isSignin }: Props) => {
 			<div className='my-3 flex justify-between text-sm'>
 				<input
 					aria-label='Email'
-					className='border rounded p-2 py-3 w-full'
+					className='w-full rounded border p-2 py-3'
 					name='email'
 					onChange={handleChangeInput}
 					placeholder='Email'
@@ -54,7 +54,7 @@ const AuthModalInput = ({ inputs, handleChangeInput, isSignin }: Props) => {
 				<div className='my-3 flex justify-between text-sm'>
 					<input
 						aria-label='Phone'
-						className='border rounded p-2 py-3 w-[49%]'
+						className='w-[49%] rounded border p-2 py-3'
 						name='phone'
 						onChange={handleChangeInput}
 						placeholder='Phone'
@@ -63,7 +63,7 @@ const AuthModalInput = ({ inputs, handleChangeInput, isSignin }: Props) => {
 					/>
 					<input
 						aria-label='City'
-						className='border rounded p-2 py-3 w-[49%]'
+						className='w-[49%] rounded border p-2 py-3'
 						name='city'
 						onChange={handleChangeInput}
 						placeholder='City'
@@ -75,7 +75,7 @@ const AuthModalInput = ({ inputs, handleChangeInput, isSignin }: Props) => {
 			<div className='my-3 flex justify-between text-sm'>
 				<input
 					aria-label='Password'
-					className='border rounded p-2 py-3 w-full'
+					className='w-full rounded border p-2 py-3'
 					name='password'
 					onChange={handleChangeInput}
 					placeholder='Password'
@@ -87,20 +87,21 @@ const AuthModalInput = ({ inputs, handleChangeInput, isSignin }: Props) => {
 				<div className='my-3 flex flex-col text-sm'>
 					<input
 						aria-label='Confirm password'
-						className='border rounded p-2 py-3 w-full'
+						className='w-full rounded border p-2 py-3'
 						name='confirmPassword'
 						onChange={handleChangeInput}
 						placeholder='Confirm password'
 						type='password'
 						value={inputs.confirmPassword}
 					/>
-					{inputs.confirmPassword && inputs.password !== inputs.confirmPassword && (
-						<p className='text-red-500 mt-1'>Passwords do not match</p>
-					)}
+					{inputs.confirmPassword &&
+						inputs.password !== inputs.confirmPassword && (
+							<p className='mt-1 text-red-500'>Passwords do not match</p>
+						)}
 				</div>
 			)}
 		</>
-	);
-};
+	)
+}
 
-export default AuthModalInput;
+export default AuthModalInput

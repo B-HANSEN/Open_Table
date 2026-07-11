@@ -1,26 +1,27 @@
-'use client'; // useContext hook requires to define it as client component
+'use client' // useContext hook requires to define it as client component
 
-import axios from 'axios';
-import { getCookie } from 'cookies-next';
-import React, { useState, createContext, useEffect } from 'react';
+import axios from 'axios'
+import { getCookie } from 'cookies-next'
+import type React from 'react'
+import { createContext, useCallback, useEffect, useState } from 'react'
 
 interface User {
-	id: number;
-	firstName: string;
-	lastName: string;
-	email: string;
-	city: string;
-	phone: string;
+	id: number
+	firstName: string
+	lastName: string
+	email: string
+	city: string
+	phone: string
 }
 
 interface State {
-	loading: boolean;
-	error: string | null;
-	data: User | null;
+	loading: boolean
+	error: string | null
+	data: User | null
 }
 
 interface AuthState extends State {
-	setAuthState: React.Dispatch<React.SetStateAction<State>>;
+	setAuthState: React.Dispatch<React.SetStateAction<State>>
 }
 
 export const AuthenticationContext = createContext<AuthState>({
@@ -28,62 +29,62 @@ export const AuthenticationContext = createContext<AuthState>({
 	error: null,
 	data: null,
 	setAuthState: () => {},
-});
+})
 
 export default function AuthContext({
 	children,
 }: {
-	children: React.ReactNode;
+	children: React.ReactNode
 }) {
 	const [authState, setAuthState] = useState<State>({
 		loading: true,
 		data: null,
 		error: null,
-	});
+	})
 
-	const fetchUser = async () => {
+	const fetchUser = useCallback(async () => {
 		setAuthState({
 			data: null,
 			error: null,
 			loading: true,
-		});
+		})
 
 		try {
-			const jwt = getCookie('jwt');
+			const jwt = getCookie('jwt')
 
 			if (!jwt) {
 				return setAuthState({
 					data: null,
 					error: null,
 					loading: false,
-				});
+				})
 			}
 
 			const response = await axios.get('/api/auth/me', {
 				headers: {
 					Authorization: `Bearer ${jwt}`,
 				},
-			});
+			})
 
-			axios.defaults.headers.common['Authorization'] = `Bearer ${jwt}`; // for all other subsequent request, bearer token should always be in there
+			axios.defaults.headers.common.Authorization = `Bearer ${jwt}` // for all other subsequent request, bearer token should always be in there
 
 			setAuthState({
 				data: response.data,
 				error: null,
 				loading: false,
-			});
+			})
 		} catch (error: any) {
 			setAuthState({
 				data: null,
 				error: error.response.data.errorMessage,
 				loading: false,
-			});
+			})
 		}
-	};
+	}, [])
 
 	useEffect(() => {
-		fetchUser();
-	}, []); // on app first load or reload, call fetchUser
+		fetchUser()
+	}, [fetchUser]) // on app first load or reload, call fetchUser
 
 	return (
 		// 'client component' can render 'server components' only when passed as 'children'
@@ -96,5 +97,5 @@ export default function AuthContext({
 		>
 			{children}
 		</AuthenticationContext.Provider>
-	);
+	)
 }

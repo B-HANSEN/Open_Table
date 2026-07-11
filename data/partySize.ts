@@ -39,4 +39,4 @@ export const partySize = [
 		value: 10,
 		label: '10 people',
 	},
-];
+]

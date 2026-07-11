@@ -1,14 +1,14 @@
-import { Cuisine, Location, PRICE } from '@prisma/client';
-import Link from 'next/link';
+import { type Cuisine, type Location, PRICE } from '@prisma/client'
+import Link from 'next/link'
 
 export default function SearchSidebar({
 	locations,
 	cuisines,
 	searchParams,
 }: {
-	locations: Location[];
-	cuisines: Cuisine[];
-	searchParams: { city?: string; cuisine?: string; price?: PRICE };
+	locations: Location[]
+	cuisines: Cuisine[]
+	searchParams: { city?: string; cuisine?: string; price?: PRICE }
 }) {
 	const prices = [
 		{
@@ -26,16 +26,15 @@ export default function SearchSidebar({
 			label: '$$$$',
 			className: 'border w-full text-reg text-center font-light rounded-r p-2',
 		},
-	];
+	]
 
 	return (
 		<div className='w-1/5'>
-			<div className='flex flex-col pb-4 border-b'>
+			<div className='flex flex-col border-b pb-4'>
 				<h1 className='mb-2'>Region</h1>
 				{locations.map((el) => (
 					<Link
-						key={el.id}
-						className='font-light capitalize text-reg'
+						className='font-light text-reg capitalize'
 						href={{
 							pathname: '/search',
 							query: {
@@ -43,17 +42,17 @@ export default function SearchSidebar({
 								city: el.name, // add city as param
 							},
 						}}
+						key={el.id}
 					>
 						{el.name}
 					</Link>
 				))}
 			</div>
-			<div className='flex flex-col pb-4 mt-3 border-b'>
+			<div className='mt-3 flex flex-col border-b pb-4'>
 				<h1 className='mb-2'>Cuisine</h1>
 				{cuisines.map((el) => (
 					<Link
-						key={el.id}
-						className='font-light capitalize text-reg'
+						className='font-light text-reg capitalize'
 						href={{
 							pathname: '/search',
 							query: {
@@ -61,17 +60,17 @@ export default function SearchSidebar({
 								cuisine: el.name,
 							},
 						}}
+						key={el.id}
 					>
 						{el.name}
 					</Link>
 				))}
 			</div>
-			<div className='pb-4 mt-3'>
+			<div className='mt-3 pb-4'>
 				<h1 className='mb-2'>Price</h1>
 				<div className='flex'>
-					{prices.map(({ price, label, className }, index) => (
+					{prices.map(({ price, label, className }) => (
 						<Link
-							key={index}
 							className={className}
 							href={{
 								pathname: '/search',
@@ -80,6 +79,7 @@ export default function SearchSidebar({
 									price,
 								},
 							}}
+							key={price}
 						>
 							{label}
 						</Link>
@@ -87,5 +87,5 @@ export default function SearchSidebar({
 				</div>
 			</div>
 		</div>
-	);
+	)
 }

@@ -1,32 +1,32 @@
-import { prisma } from '@/lib/prisma';
-import { notFound } from 'next/navigation';
-import Form from './components/Form';
-import Header from './components/Header';
+import { notFound } from 'next/navigation'
+import { prisma } from '@/lib/prisma'
+import Form from './components/Form'
+import Header from './components/Header'
 
 const fetchRestaurantBySlug = async (slug: string) => {
 	const restaurant = await prisma.restaurant.findUnique({
 		where: { slug },
-	});
+	})
 	if (!restaurant) {
-		notFound();
+		notFound()
 	}
-	return restaurant;
-};
+	return restaurant
+}
 
 export default async function Reserve({
 	params,
 	searchParams,
 }: {
-	params: Promise<{ slug: string }>;
-	searchParams: Promise<{ date: string; partySize: string }>;
+	params: Promise<{ slug: string }>
+	searchParams: Promise<{ date: string; partySize: string }>
 }) {
-	const { slug } = await params;
-	const { date, partySize } = await searchParams;
-	const restaurant = await fetchRestaurantBySlug(slug);
+	const { slug } = await params
+	const { date, partySize } = await searchParams
+	const restaurant = await fetchRestaurantBySlug(slug)
 
 	return (
-		<div className='border-t h-screen'>
-			<div className='py-9 w-3/5 m-auto'>
+		<div className='h-screen border-t'>
+			<div className='m-auto w-3/5 py-9'>
 				<Header
 					date={date}
 					image={restaurant.main_image}
@@ -36,5 +36,5 @@ export default async function Reserve({
 				<Form date={date} partySize={partySize} slug={slug} />
 			</div>
 		</div>
-	);
+	)
 }

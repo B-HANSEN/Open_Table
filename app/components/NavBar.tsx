@@ -1,18 +1,18 @@
-'use client';
+'use client'
 
-import { useContext } from 'react';
-import Link from 'next/link';
-import AuthModal from './AuthModal';
-import { AuthenticationContext } from '../context/AuthContext';
-import useAuth from '../../hooks/useAuth';
+import Link from 'next/link'
+import { useContext } from 'react'
+import useAuth from '../../hooks/useAuth'
+import { AuthenticationContext } from '../context/AuthContext'
+import AuthModal from './AuthModal'
 
 const NavBar = () => {
-	const { data, loading } = useContext(AuthenticationContext);
-	const { signout } = useAuth();
+	const { data, loading } = useContext(AuthenticationContext)
+	const { signout } = useAuth()
 
 	return (
-		<nav className='bg-white p-2 flex justify-between'>
-			<Link className='font-bold text-gray-700 text-2xl' href='/'>
+		<nav className='flex justify-between bg-white p-2'>
+			<Link className='font-bold text-2xl text-gray-700' href='/'>
 				{' '}
 				OpenTable{' '}
 			</Link>
@@ -21,8 +21,9 @@ const NavBar = () => {
 					<div className='flex'>
 						{data ? (
 							<button
-								className='bg-blue-400 text-white border p-1 px-4 rounded mr-3'
+								className='mr-3 rounded border bg-blue-400 p-1 px-4 text-white'
 								onClick={signout}
+								type='button'
 							>
 								Sign out
 							</button>
@@ -36,7 +37,7 @@ const NavBar = () => {
 				</div>
 			)}
 		</nav>
-	);
-};
+	)
+}
 
-export default NavBar;
+export default NavBar

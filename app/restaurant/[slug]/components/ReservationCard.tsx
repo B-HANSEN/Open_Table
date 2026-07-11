@@ -1,65 +1,72 @@
-'use client';
+'use client'
 
-import { CircularProgress } from '@mui/material';
-import Link from 'next/link';
-import { useState } from 'react';
-import DatePicker from 'react-datepicker';
-import { partySize as partySizes, times } from '../../../../data';
-import useAvailabilities from '../../../../hooks/useAvailability';
+import { CircularProgress } from '@mui/material'
+import Link from 'next/link'
+import { useState } from 'react'
+import DatePicker from 'react-datepicker'
+import { partySize as partySizes, times } from '../../../../data'
+import useAvailabilities from '../../../../hooks/useAvailability'
 import {
 	convertToDisplayTime,
-	Time,
-} from '../../../../utils/convertToDisplayTime';
+	type Time,
+} from '../../../../utils/convertToDisplayTime'
 
 export default function ReservationCard({
 	openTime,
 	closeTime,
 	slug,
 }: {
-	openTime: string;
-	closeTime: string;
-	slug: string;
+	openTime: string
+	closeTime: string
+	slug: string
 }) {
-	const { loading, data, fetchAvailabilities } = useAvailabilities();
-	const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
-	const [time, setTime] = useState(openTime);
-	const [partySize, setPartySize] = useState('2');
-	const [day, setDay] = useState(new Date().toISOString().split('T')[0]); // default value is today
+	const { loading, data, fetchAvailabilities } = useAvailabilities()
+	const [selectedDate, setSelectedDate] = useState<Date | null>(new Date())
+	const [time, setTime] = useState(openTime)
+	const [partySize, setPartySize] = useState('2')
+	const [day, setDay] = useState(new Date().toISOString().split('T')[0]) // default value is today
 
 	const handleChangeDate = (date: Date | null) => {
 		if (date) {
-			setDay(date.toISOString().split('T')[0]); // date format: 2023-06-01T02:00:00.000Z
-			return setSelectedDate(date);
-		} else setSelectedDate(null);
-	};
+			setDay(date.toISOString().split('T')[0]) // date format: 2023-06-01T02:00:00.000Z
+			return setSelectedDate(date)
+		} else setSelectedDate(null)
+	}
 
 	const renderAvailability = () => {
-		if (!data) return null;
+		if (!data) return null
 		if (!data.some((t) => t.available))
-			return <p className='text-sm mt-4 text-reg'>No availability for this date, time, or party size.</p>;
+			return (
+				<p className='mt-4 text-reg text-sm'>
+					No availability for this date, time, or party size.
+				</p>
+			)
 		return (
 			<div className='mt-4'>
 				<p className='text-reg'>Select a time</p>
-				<div className='flex flex-wrap mt-2'>
-					{data.map((time, index) =>
+				<div className='mt-2 flex flex-wrap'>
+					{data.map((time, _index) =>
 						time.available ? (
 							<Link
-								key={index}
-								className='w-24 p-2 mb-3 mr-3 text-center text-white bg-gray-300 rounded cursor-pointer'
+								className='mr-3 mb-3 w-24 cursor-pointer rounded bg-gray-300 p-2 text-center text-white'
 								href={`/reserve/${slug}?date=${day}T${time.time}&partySize=${partySize}`}
+								key={time.time}
 							>
-								<p className='text-sm font-bold'>
+								<p className='font-bold text-sm'>
 									{convertToDisplayTime(time.time as Time)}
 								</p>
 							</Link>
 						) : (
-							<p key={index} className='w-24 p-2 mb-3 mr-3 bg-gray-300 rounded'></p>
+							<p
+								className='mr-3 mb-3 w-24 rounded bg-gray-300 p-2'
+								key={time.time}
+							></p>
 						)
 					)}
 				</div>
 			</div>
-		);
-	};
+		)
+	}
 
 	const handleClick = () => {
 		fetchAvailabilities({
@@ -67,55 +74,55 @@ export default function ReservationCard({
 			day,
 			time,
 			partySize,
-		});
-	};
+		})
+	}
 
 	const filterTimesByRestaurantOpenWindow = () => {
 		// for each restaurant, dynamically return different options
-		const timesWithinWindow: typeof times = [];
-		let isWithinWindow = false;
+		const timesWithinWindow: typeof times = []
+		let isWithinWindow = false
 
 		times.forEach((time) => {
 			if (!isWithinWindow && time.time === openTime) {
-				isWithinWindow = true; // when reached start of the window
+				isWithinWindow = true // when reached start of the window
 			}
 			if (isWithinWindow) {
-				timesWithinWindow.push(time); // push all times into array
+				timesWithinWindow.push(time) // push all times into array
 			}
 			if (time.time === closeTime) {
-				isWithinWindow = false; // when reached end of the window
+				isWithinWindow = false // when reached end of the window
 			}
-		});
+		})
 
-		return timesWithinWindow;
-	};
+		return timesWithinWindow
+	}
 
 	return (
-		<div className='fixed w-[15%] bg-white rounded p-3 shadow'>
-			<div className='pb-2 font-bold text-center border-b'>
-				<h4 className='text-lg mr-7'>Make a Reservation</h4>
+		<div className='fixed w-[15%] rounded bg-white p-3 shadow'>
+			<div className='border-b pb-2 text-center font-bold'>
+				<h4 className='mr-7 text-lg'>Make a Reservation</h4>
 			</div>
-			<div className='flex flex-col my-3'>
+			<div className='my-3 flex flex-col'>
 				<label htmlFor='party-size'>Party size</label>
 				<select
-					className='py-3 font-light border-b'
+					className='border-b py-3 font-light'
 					id='party-size'
 					name='partySize'
 					onChange={(e) => setPartySize(e.target.value)}
 					value={partySize}
 				>
-					{partySizes.map((size, index) => (
-						<option key={index} value={size.value}>
+					{partySizes.map((size, _index) => (
+						<option key={size.value} value={size.value}>
 							{size.label}
 						</option>
 					))}
 				</select>
 			</div>
-			<div className='flex justify-between]'>
-				<div className='flex flex-col w-[48%]'>
+			<div className='justify-between] flex'>
+				<div className='flex w-[48%] flex-col'>
 					<label htmlFor='reservation-date'>Date</label>
 					<DatePicker
-						className='w-24 py-3 font-light border-b text-reg h-14'
+						className='h-14 w-24 border-b py-3 font-light text-reg'
 						dateFormat='MMMM d'
 						id='reservation-date'
 						onChange={handleChangeDate}
@@ -123,17 +130,17 @@ export default function ReservationCard({
 						wrapperClassName='w-[48%]'
 					/>
 				</div>
-				<div className='flex flex-col w-[48%]'>
+				<div className='flex w-[48%] flex-col'>
 					<label htmlFor='reservation-time'>Time</label>
 					<select
-						className='py-3 font-light border-b h-14'
+						className='h-14 border-b py-3 font-light'
 						id='reservation-time'
 						name='time'
 						onChange={(e) => setTime(e.target.value)}
 						value={time}
 					>
-						{filterTimesByRestaurantOpenWindow().map((time, index) => (
-							<option key={index} value={time.time}>
+						{filterTimesByRestaurantOpenWindow().map((time, _index) => (
+							<option key={time.time} value={time.time}>
 								{time.displayTime}
 							</option>
 						))}
@@ -142,14 +149,15 @@ export default function ReservationCard({
 			</div>
 			<div className='mt-5'>
 				<button
-					className='w-full h-16 px-4 font-bold text-white bg-red-600 rounded'
+					className='h-16 w-full rounded bg-red-600 px-4 font-bold text-white'
 					disabled={loading}
 					onClick={handleClick}
+					type='button'
 				>
 					{loading ? <CircularProgress color='inherit' /> : 'Find a time'}
 				</button>
 			</div>
 			{renderAvailability()}
 		</div>
-	);
+	)
 }

@@ -1,9 +1,9 @@
-import { Dispatch, SetStateAction, useState } from 'react';
-import axios from 'axios';
+import axios from 'axios'
+import { type Dispatch, type SetStateAction, useState } from 'react'
 
 export default function useReservation() {
-	const [loading, setLoading] = useState(false);
-	const [error, setError] = useState(null);
+	const [loading, setLoading] = useState(false)
+	const [error, setError] = useState(null)
 
 	const createReservation = async ({
 		slug,
@@ -18,19 +18,19 @@ export default function useReservation() {
 		bookerRequest,
 		setDidBook,
 	}: {
-		slug: string;
-		partySize: string;
-		day: string;
-		time: string;
-		bookerFirstName: string;
-		bookerLastName: string;
-		bookerPhone: string;
-		bookerEmail: string;
-		bookerOccasion: string;
-		bookerRequest: string;
-		setDidBook: Dispatch<SetStateAction<boolean>>;
+		slug: string
+		partySize: string
+		day: string
+		time: string
+		bookerFirstName: string
+		bookerLastName: string
+		bookerPhone: string
+		bookerEmail: string
+		bookerOccasion: string
+		bookerRequest: string
+		setDidBook: Dispatch<SetStateAction<boolean>>
 	}) => {
-		setLoading(true);
+		setLoading(true)
 
 		try {
 			const response = await axios.post(
@@ -46,15 +46,15 @@ export default function useReservation() {
 				{
 					params: { day, time, partySize },
 				}
-			);
-			setLoading(false);
-			setDidBook(true);
-			return response.data;
+			)
+			setLoading(false)
+			setDidBook(true)
+			return response.data
 		} catch (error: any) {
-			setLoading(false);
-			setError(error.response.data.errorMessage);
+			setLoading(false)
+			setError(error.response.data.errorMessage)
 		}
-	};
+	}
 
-	return { loading, error, createReservation };
+	return { loading, error, createReservation }
 }

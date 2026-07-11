@@ -1,7 +1,7 @@
-import { NextRequest } from 'next/server';
-import { prisma } from '@/lib/prisma';
-import { findAvailableTables } from '../../../../../services/restaurant/findAvailableTables';
-import { availabilityQuerySchema, bookerSchema } from '@/lib/schemas';
+import type { NextRequest } from 'next/server'
+import { prisma } from '@/lib/prisma'
+import { availabilityQuerySchema, bookerSchema } from '@/lib/schemas'
+import { findAvailableTables } from '../../../../../services/restaurant/findAvailableTables'
 
 // Note: request with +1hr in the URL!!!
 // http://localhost:3000/api/restaurant/vivaan-fine-indian-cuisine-ottawa/reserve?day=2023-02-03&time=15:00:00.000Z&partySize=4
@@ -10,26 +10,29 @@ export async function POST(
 	request: NextRequest,
 	{ params }: { params: Promise<{ slug: string }> }
 ) {
-	const { slug } = await params;
-	const { searchParams } = request.nextUrl;
+	const { slug } = await params
+	const { searchParams } = request.nextUrl
 
 	const queryResult = availabilityQuerySchema.safeParse({
 		day: searchParams.get('day'),
 		time: searchParams.get('time'),
 		partySize: searchParams.get('partySize'),
-	});
+	})
 
 	if (!queryResult.success) {
-		return Response.json({ errorMessage: 'Invalid data provided.' }, { status: 400 });
+		return Response.json(
+			{ errorMessage: 'Invalid data provided.' },
+			{ status: 400 }
+		)
 	}
 
-	const { day, time, partySize } = queryResult.data;
+	const { day, time, partySize } = queryResult.data
 
-	const bodyResult = bookerSchema.safeParse(await request.json());
+	const bodyResult = bookerSchema.safeParse(await request.json())
 
 	if (!bodyResult.success) {
-		const errorMessage = bodyResult.error.issues[0].message;
-		return Response.json({ errorMessage }, { status: 400 });
+		const errorMessage = bodyResult.error.issues[0].message
+		return Response.json({ errorMessage }, { status: 400 })
 	}
 
 	const {
@@ -39,15 +42,18 @@ export async function POST(
 		bookerLastName,
 		bookerOccasion,
 		bookerRequest,
-	} = bodyResult.data;
+	} = bodyResult.data
 
 	const restaurant = await prisma.restaurant.findUnique({
 		where: { slug },
 		select: { tables: true, open_time: true, close_time: true, id: true },
-	});
+	})
 
 	if (!restaurant) {
-		return Response.json({ errorMessage: 'Restaurant not found.' }, { status: 400 });
+		return Response.json(
+			{ errorMessage: 'Restaurant not found.' },
+			{ status: 400 }
+		)
 	}
 
 	if (
@@ -57,56 +63,66 @@ export async function POST(
 		return Response.json(
 			{ errorMessage: 'Restaurant is open not at that time.' },
 			{ status: 400 }
-		);
+		)
 	}
 
-	const searchTimesWithTables = await findAvailableTables({ day, time, restaurant });
+	const searchTimesWithTables = await findAvailableTables({
+		day,
+		time,
+		restaurant,
+	})
 
 	if (!searchTimesWithTables) {
-		return Response.json({ errorMessage: 'Invalid data provided.' }, { status: 400 });
+		return Response.json(
+			{ errorMessage: 'Invalid data provided.' },
+			{ status: 400 }
+		)
 	}
 
 	const searchTimeWithTables = searchTimesWithTables.find((t) => {
-		return t.date.toISOString() === new Date(`${day}T${time}`).toISOString(); // unify date formats to avoid inconsistencies when comparing
-	});
+		return t.date.toISOString() === new Date(`${day}T${time}`).toISOString() // unify date formats to avoid inconsistencies when comparing
+	})
 
 	if (!searchTimeWithTables) {
-		return Response.json({ errorMessage: 'No availability, cannot book.' }, { status: 400 });
+		return Response.json(
+			{ errorMessage: 'No availability, cannot book.' },
+			{ status: 400 }
+		)
 	}
 
-	const tablesCount: { 2: number[]; 4: number[] } = { 2: [], 4: [] };
+	const tablesCount: { 2: number[]; 4: number[] } = { 2: [], 4: [] }
 
 	searchTimeWithTables.tables.forEach((table) => {
 		if (table.seats === 2) {
-			tablesCount[2].push(table.id);
+			tablesCount[2].push(table.id)
 		} else {
-			tablesCount[4].push(table.id);
+			tablesCount[4].push(table.id)
 		}
-	}); // tablesCount: { "2": [3], "4": [1, 2] } --- table id 3 has 2 seats
+	}) // tablesCount: { "2": [3], "4": [1, 2] } --- table id 3 has 2 seats
 
-	const tablesToBook: number[] = [];
-	let seatsRemaining = partySize;
+	const tablesToBook: number[] = []
+	let seatsRemaining = partySize
 
 	while (seatsRemaining > 0) {
 		if (seatsRemaining >= 3) {
 			if (tablesCount[4].length) {
-				tablesToBook.push(tablesCount[4][0]);
-				tablesCount[4].shift();
-				seatsRemaining = seatsRemaining - 4;
+				tablesToBook.push(tablesCount[4][0])
+				tablesCount[4].shift()
+				seatsRemaining = seatsRemaining - 4
 			} else {
-				tablesToBook.push(tablesCount[2][0]);
-				tablesCount[2].shift();
-				seatsRemaining = seatsRemaining - 2;
+				tablesToBook.push(tablesCount[2][0])
+				tablesCount[2].shift()
+				seatsRemaining = seatsRemaining - 2
 			}
 		} else {
 			if (tablesCount[2].length) {
-				tablesToBook.push(tablesCount[2][0]);
-				tablesCount[2].shift();
-				seatsRemaining = seatsRemaining - 2;
+				tablesToBook.push(tablesCount[2][0])
+				tablesCount[2].shift()
+				seatsRemaining = seatsRemaining - 2
 			} else {
-				tablesToBook.push(tablesCount[4][0]);
-				tablesCount[4].shift();
-				seatsRemaining = seatsRemaining - 4;
+				tablesToBook.push(tablesCount[4][0])
+				tablesCount[4].shift()
+				seatsRemaining = seatsRemaining - 4
 			}
 		}
 	}
@@ -123,14 +139,14 @@ export async function POST(
 			booker_request: bookerRequest,
 			restaurant_id: restaurant.id,
 		},
-	});
+	})
 
 	const bookingsOnTablesData = tablesToBook.map((table_id) => ({
 		table_id,
 		booking_id: booking.id,
-	}));
+	}))
 
-	await prisma.bookingsOnTables.createMany({ data: bookingsOnTablesData });
+	await prisma.bookingsOnTables.createMany({ data: bookingsOnTablesData })
 
-	return Response.json({ booking });
+	return Response.json({ booking })
 }
